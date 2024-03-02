@@ -5,6 +5,8 @@ pub fn version() -> i32 {
     1
 }
 
+const USAGE: &str = "Usage: carben";
+
 pub struct MainRunner {
     args: Vec<String>,
     stdout: Stdout
@@ -28,6 +30,9 @@ impl MainRunner {
         let result = writeln!(self.stdout, "argc {argc}");
         if result.is_err() {
             return result;
+        }
+        if argc == 1 {
+            return writeln!(self.stdout, "{USAGE}");
         }
         Ok(())
     }
