@@ -1,10 +1,9 @@
-use std::env;
 use carben;
 
 pub fn main() {
-    let version = carben::version();
-    println!("version {version}");
-    let args: Vec<String> = env::args().collect();
-    let argc = args.len();
-    println!("argc {argc}");
+    let mut runner = carben::MainRunner::new();
+    let result = runner.run();
+    if result.is_err() {
+        eprintln!("Error: {:?}", result);
+    }
 }
