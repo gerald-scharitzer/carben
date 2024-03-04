@@ -8,5 +8,5 @@ Get the carbon intensity of energy systems.
 2. Enter with `cd carben`
 3. Build with `cargo build`
 4. Test with `cargo test`
-5. Run with `cargo run`
+5. Run with `cargo run [-- args]`
 6. Build with `cargo build --release`
