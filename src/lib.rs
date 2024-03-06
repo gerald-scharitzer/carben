@@ -1,6 +1,8 @@
 use std::env;
 use std::io::{Result, Stdout, Write};
 
+mod electricity_maps;
+
 pub fn version() -> i32 {
 	1
 }
@@ -37,6 +39,12 @@ impl MainRunner {
 				"version" => {
 					let version = version();
 					return writeln!(self.stdout, "version {version}");
+				}
+				"zones" => {
+					let zone = electricity_maps::zone();
+					let name = zone.name;
+					let country = zone.country;
+					return writeln!(self.stdout, "zone {name} {country}");
 				}
 				_ => {
 					return writeln!(self.stdout, "{USAGE}");
