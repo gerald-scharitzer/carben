@@ -1,8 +1,9 @@
+use std::error::Error;
+
 use carben;
 
-pub fn main() {
+pub fn main() -> Result<(), Box<dyn Error>> {
 	let mut runner = carben::MainRunner::new();
-	if let Err(msg) = runner.run() {
-		eprintln!("Error: {msg}");
-	}
+	runner.run()?;
+	Ok(())
 }

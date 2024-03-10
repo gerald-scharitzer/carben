@@ -1,4 +1,5 @@
 use std::env;
+use std::error::Error;
 use std::io::{Stdout, Write};
 use std::result::Result;
 
@@ -25,12 +26,10 @@ impl MainRunner {
 		}
 	}
 
-	pub fn run(&mut self) -> Result<(), String> { // TODO Result<(), Box<dyn Error>>
+	pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 		let argc = self.args.len();
 		if argc == 1 {
-			if let Err(err) = writeln!(self.stdout, "{USAGE}") {
-				return Err(err.to_string());
-			}
+			writeln!(self.stdout, "{USAGE}")?;
 		}
 
 		if argc > 1 {
@@ -38,22 +37,16 @@ impl MainRunner {
 			match command.as_str() {
 				"version" => {
 					let version = version();
-					if let Err(err) = writeln!(self.stdout, "version {version}") {
-						return Err(err.to_string());
-					}
+					writeln!(self.stdout, "version {version}")?;
 				}
 				"zones" => {
 					let zone = electricity_maps::zone();
 					let name = zone.name;
 					let country = zone.country;
-					if let Err(err) = writeln!(self.stdout, "zone {name} {country}") {
-						return Err(err.to_string());
-					}
+					writeln!(self.stdout, "zone {name} {country}")?;
 				}
 				_ => {
-					if let Err(err) = writeln!(self.stdout, "{USAGE}") {
-						return Err(err.to_string());
-					}
+					writeln!(self.stdout, "{USAGE}")?;
 				}
 			}
 		}
