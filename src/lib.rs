@@ -1,5 +1,6 @@
 use std::env;
-use std::io::{Result, Stdout, Write};
+use std::io::{Stdout, Write};
+use std::result::Result;
 
 mod electricity_maps;
 
@@ -7,7 +8,9 @@ pub fn version() -> i32 {
 	1
 }
 
-const USAGE: &str = "Usage: carben version";
+const USAGE: &str = "Usage: carben [version | zones]
+	version: print the version
+	zones: print the zone name and country";
 
 pub struct MainRunner {
 	args: Vec<String>,
@@ -22,15 +25,12 @@ impl MainRunner {
 		}
 	}
 
-	pub fn run(&mut self) -> Result<()> {
+	pub fn run(&mut self) -> Result<(), String> { // TODO Result<(), Box<dyn Error>>
 		let argc = self.args.len();
-		let result = writeln!(self.stdout, "argc {argc}");
-		if result.is_err() {
-			return result;
-		}
-
 		if argc == 1 {
-			return writeln!(self.stdout, "{USAGE}");
+			if let Err(err) = writeln!(self.stdout, "{USAGE}") {
+				return Err(err.to_string());
+			}
 		}
 
 		if argc > 1 {
@@ -38,16 +38,22 @@ impl MainRunner {
 			match command.as_str() {
 				"version" => {
 					let version = version();
-					return writeln!(self.stdout, "version {version}");
+					if let Err(err) = writeln!(self.stdout, "version {version}") {
+						return Err(err.to_string());
+					}
 				}
 				"zones" => {
 					let zone = electricity_maps::zone();
 					let name = zone.name;
 					let country = zone.country;
-					return writeln!(self.stdout, "zone {name} {country}");
+					if let Err(err) = writeln!(self.stdout, "zone {name} {country}") {
+						return Err(err.to_string());
+					}
 				}
 				_ => {
-					return writeln!(self.stdout, "{USAGE}");
+					if let Err(err) = writeln!(self.stdout, "{USAGE}") {
+						return Err(err.to_string());
+					}
 				}
 			}
 		}

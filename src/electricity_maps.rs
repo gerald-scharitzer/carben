@@ -4,7 +4,7 @@ pub struct Zone {
 }
 
 impl Zone {
-	fn new(name: &str, country: &str) -> Zone {
+	fn new(name: &str, country: &str) -> Self {
 		Zone {
 			name: name.to_string(),
 			country: country.to_string()
