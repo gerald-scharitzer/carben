@@ -1,19 +1,21 @@
-pub struct Zone {
+pub struct Zone<'a> {
+	// Equal names usually refer to equal zones, so own the name
 	pub name: String,
-	pub country: String
+	// One country can have multiple zones, so borrow the country
+	pub country: &'a str
 }
 
-impl Zone {
-	fn new(name: &str, country: &str) -> Self {
+impl<'a> Zone<'a> {
+	fn new(name: String, country: &'a str) -> Self {
 		Zone {
-			name: name.to_string(),
-			country: country.to_string()
+			name: name,
+			country: country
 		}
 	}
 }
 
-pub fn zone() -> Zone {
-	Zone::new("Copenhagen", "Denmark")
+pub fn zone<'a>() -> Zone<'a> {
+	Zone::new("Copenhagen".to_string(), "Denmark")
 }
 
 #[cfg(test)]
@@ -24,7 +26,7 @@ mod tests {
 	fn test_zone() {
 		const NAME: &str = "Copenhagen";
 		const COUNTRY: &str = "Denmark";
-		let result = Zone::new(NAME, COUNTRY);
+		let result = Zone::new(NAME.to_string(), COUNTRY);
 		assert_eq!(result.name, NAME);
 		assert_eq!(result.country, COUNTRY);
 	}
