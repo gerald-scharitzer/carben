@@ -1,3 +1,5 @@
+pub mod health;
+
 pub struct Zone {
 	// Equal names usually refer to equal zones
 	pub name: String,

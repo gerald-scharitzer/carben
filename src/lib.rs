@@ -9,7 +9,7 @@ pub fn version() -> i32 {
 	1
 }
 
-const USAGE: &str = "Usage: carben [version | zones]
+const USAGE: &str = "Usage: carben [health | version | zones]
 	version: print the version
 	zones: print the zone name and country";
 
@@ -35,6 +35,12 @@ impl MainRunner {
 		if argc > 1 {
 			let command = &self.args[1];
 			match command.as_str() {
+				"health" => {
+					let health = electricity_maps::health::health();
+					let state = health.monitors.state;
+					let status = health.status;
+					writeln!(self.stdout, "health {state} {status}")?;
+				}
 				"version" => {
 					let version = version();
 					writeln!(self.stdout, "version {version}")?;
