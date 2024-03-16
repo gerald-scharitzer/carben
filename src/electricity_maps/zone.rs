@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub struct Zone {
 	// Equal names usually refer to equal zones
 	pub name: String,
@@ -11,20 +13,33 @@ impl Zone {
 	}
 }
 
-pub fn zone() -> Zone {
-	Zone::new("Copenhagen".to_string(), Some("Denmark".to_string()))
+pub fn zones() -> HashMap<String, Zone> {
+	let mut zones = HashMap::new();
+	zones.insert("DK011".to_string(), Zone::new("Copenhagen".to_string(), Some("Denmark".to_string())));
+	zones
 }
 
 #[cfg(test)]
 mod tests {
 	use super::*;
 
+	const KEY: &str = "DK011";
+	const NAME: &str = "Copenhagen";
+	const COUNTRY: &str = "Denmark";
+
 	#[test]
 	fn test_zone() {
-		const NAME: &str = "Copenhagen";
-		const COUNTRY: &str = "Denmark";
-		let result = Zone::new(NAME.to_string(), Some(COUNTRY.to_string()));
-		assert_eq!(result.name, NAME);
-		assert_eq!(result.country, Some(COUNTRY.to_string()));
+		let zone = Zone::new(NAME.to_string(), Some(COUNTRY.to_string()));
+		assert_eq!(zone.name, NAME);
+		assert_eq!(zone.country, Some(COUNTRY.to_string()));
+	}
+
+	#[test]
+	fn test_zones() {
+		let zones = zones();
+		assert_eq!(zones.len(), 1);
+		let zone = zones.get(KEY).unwrap();
+		assert_eq!(zone.name, NAME);
+		assert_eq!(zone.country, Some(COUNTRY.to_string()));
 	}
 }

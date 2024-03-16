@@ -47,12 +47,14 @@ impl MainRunner {
 					writeln!(self.stdout, "version {version}")?;
 				}
 				"zones" => {
-					let zone = electricity_maps::zone();
-					let name = zone.name;
-					let country = zone.country;
-					match country {
-						Some(country) => writeln!(self.stdout, "zone {name} {country}")?,
-						None => writeln!(self.stdout, "zone {name}")?
+					let zones = electricity_maps::zones();
+					for (key, zone) in zones {
+						let name = zone.name;
+						let country = zone.country;
+						match country {
+							Some(country) => writeln!(self.stdout, "zone {key} {name} {country}")?,
+							None => writeln!(self.stdout, "zone {key} {name}")?
+						}
 					}
 				}
 				_ => {
