@@ -10,6 +10,7 @@ pub fn version() -> i32 {
 }
 
 const USAGE: &str = "Usage: carben [health | version | zones]
+	health: print the API health
 	version: print the version
 	zones: print the zone name and country";
 
@@ -36,7 +37,7 @@ impl MainRunner {
 			let command = &self.args[1];
 			match command.as_str() {
 				"health" => {
-					let health = electricity_maps::health::health();
+					let health = electricity_maps::health();
 					let state = health.monitors.state;
 					let status = health.status;
 					writeln!(self.stdout, "health {state} {status}")?;
@@ -49,7 +50,10 @@ impl MainRunner {
 					let zone = electricity_maps::zone();
 					let name = zone.name;
 					let country = zone.country;
-					writeln!(self.stdout, "zone {name} {country}")?;
+					match country {
+						Some(country) => writeln!(self.stdout, "zone {name} {country}")?,
+						None => writeln!(self.stdout, "zone {name}")?
+					}
 				}
 				_ => {
 					writeln!(self.stdout, "{USAGE}")?;
