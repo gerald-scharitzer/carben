@@ -10,3 +10,9 @@ Get the carbon intensity of energy systems.
 4. Test with `cargo test`
 5. Run with `cargo run [-- args]`
 6. Build with `cargo build --release`
+
+# License
+
+This package is licensed accoring to the BSD license and its dependencies as follows.
+
+toml: MIT

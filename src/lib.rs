@@ -1,15 +1,17 @@
 use std::env;
 use std::error::Error;
-use std::io::{Stdout, Write};
+use std::io::{self, Stdout, Write};
 use std::result::Result;
 
+// FIXME mod config;
 mod electricity_maps;
 
 pub fn version() -> i32 {
 	1
 }
 
-const USAGE: &str = "Usage: carben [health | version | zones]
+const USAGE: &str = "Usage: carben [config file | health | version | zones]
+	config file: read the configuration from the file with the given name
 	health: print the API health
 	version: print the version
 	zones: print the zone name and country";
@@ -23,7 +25,7 @@ impl MainRunner {
 	pub fn new() -> MainRunner {
 		MainRunner {
 			args: env::args().collect(),
-			stdout: std::io::stdout()
+			stdout: io::stdout()
 		}
 	}
 
@@ -33,9 +35,17 @@ impl MainRunner {
 			writeln!(self.stdout, "{USAGE}")?;
 		}
 
-		if argc > 1 {
+		if argc > 1 { // TODO iterate through the arguments
 			let command = &self.args[1];
 			match command.as_str() {
+				"config" => {
+					if argc > 2 {
+						let config_file = &self.args[2];
+						writeln!(self.stdout, "config {config_file}")?;
+					} else {
+						writeln!(self.stdout, "{USAGE}")?;
+					}
+				}
 				"health" => {
 					let health = electricity_maps::health();
 					let state = health.monitors.state;
