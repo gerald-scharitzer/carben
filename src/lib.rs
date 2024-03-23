@@ -3,7 +3,7 @@ use std::error::Error;
 use std::io::{self, Stdout, Write};
 use std::result::Result;
 
-// FIXME mod config;
+mod config;
 mod electricity_maps;
 
 pub fn version() -> i32 {
@@ -41,7 +41,8 @@ impl MainRunner {
 				"config" => {
 					if argc > 2 {
 						let config_file = &self.args[2];
-						writeln!(self.stdout, "config {config_file}")?;
+						let config = config::config(config_file)?;
+						writeln!(self.stdout, "config {config}")?;
 					} else {
 						writeln!(self.stdout, "{USAGE}")?;
 					}

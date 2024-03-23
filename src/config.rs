@@ -1,15 +1,14 @@
-use std::fs::File;
-use std::io::{BufReader, stdin};
+use std::error::Error;
+use std::fs;
+use std::io::{stdin, Read};
 
-pub fn config(filename: &str) -> Result<(), Box<dyn Error>> { // FIXME
+pub fn config(filename: &str) -> Result<String, Box<dyn Error>> {
     if filename == "-" {
-        let mut buffer = String::new();
-        stdin().read_to_string(&mut buffer)?; // TODO get from MainRunner
-        let config = toml::from_str(&buffer)?;
+        let mut config = String::new();
+        stdin().read_to_string(&mut config)?; // TODO get from MainRunner
+        Ok(config)
     } else {
-        let file = File::open(filename)?;
-        let reader = BufReader::new(file);
-        let config = toml::from_reader(reader)?;
+        let config = fs::read_to_string(filename)?;
+        Ok(config)
     }
-    Ok(())
 }

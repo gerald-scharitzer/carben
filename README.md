@@ -15,4 +15,4 @@ Get the carbon intensity of energy systems.
 
 This package is licensed accoring to the BSD license and its dependencies as follows.
 
-toml: MIT
+yaml: tbd
