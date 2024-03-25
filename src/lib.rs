@@ -3,6 +3,8 @@ use std::error::Error;
 use std::io::{self, Stdout, Write};
 use std::result::Result;
 
+use config::Config;
+
 mod config;
 mod electricity_maps;
 
@@ -30,6 +32,7 @@ impl MainRunner {
 	}
 
 	pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
+		let config = Config::new(&self.args)?;
 		let argc = self.args.len();
 		if argc == 1 {
 			writeln!(self.stdout, "{USAGE}")?;
@@ -41,7 +44,7 @@ impl MainRunner {
 				"config" => {
 					if argc > 2 {
 						let config_file = &self.args[2];
-						let config = config::config(config_file)?;
+						let config = config::from_path(config_file)?;
 						writeln!(self.stdout, "config {config}")?;
 					} else {
 						writeln!(self.stdout, "{USAGE}")?;
