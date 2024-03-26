@@ -18,6 +18,42 @@ const USAGE: &str = "Usage: carben [config file | health | version | zones]
 	version: print the version
 	zones: print the zone name and country";
 
+const DEFAULT_PROVIDER: &str = "electricity_maps";
+
+pub fn default_provider() -> String {
+	DEFAULT_PROVIDER.to_string()
+}
+
+pub struct Runner {
+	provider: String
+}
+
+impl Runner {
+	pub fn new() -> Runner {
+		Runner {
+			provider: default_provider()
+		}
+	}
+
+	pub fn run(&self) -> Result<(), Box<dyn Error>> {
+		match self.provider.as_str() {
+			"electricity_maps" => {
+				let health = electricity_maps::health();
+				let state = health.monitors.state;
+				let status = health.status;
+				println!("health {state} {status}");
+			}
+			_ => {
+				println!("{USAGE}");
+			}
+		}
+		Ok(())
+	}
+}
+
+// Run an instance of this application like a main function with a
+// - list of arguments
+// - standard output
 pub struct MainRunner {
 	args: Vec<String>,
 	stdout: Stdout
@@ -50,7 +86,7 @@ impl MainRunner {
 						writeln!(self.stdout, "{USAGE}")?;
 					}
 				}
-				"health" => {
+				"health" => { // TODO move to provider
 					let health = electricity_maps::health();
 					let state = health.monitors.state;
 					let status = health.status;
@@ -60,7 +96,7 @@ impl MainRunner {
 					let version = version();
 					writeln!(self.stdout, "version {version}")?;
 				}
-				"zones" => {
+				"zones" => { // TODO move to provider
 					let zones = electricity_maps::zones();
 					for (key, zone) in zones {
 						let name = zone.name;
@@ -76,7 +112,9 @@ impl MainRunner {
 				}
 			}
 		}
-		Ok(())
+
+		let runner = Runner::new();
+		runner.run()
 	}
 }
 
