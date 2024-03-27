@@ -9,7 +9,8 @@ Get the carbon intensity of energy systems.
 3. Build with `cargo build`
 4. Test with `cargo test`
 5. Run with `cargo run [-- args]`
-6. Build with `cargo build --release`
+6. Document with `cargo doc [--open]`
+7. Build with `cargo build --release`
 
 # License
 

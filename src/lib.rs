@@ -1,3 +1,6 @@
+//! # Carben
+//! optimizes the greenhouse gas emissions of computing workloads.
+
 use std::env;
 use std::error::Error;
 use std::io::{self, Stdout, Write};
@@ -51,9 +54,9 @@ impl Runner {
 	}
 }
 
-// Run an instance of this application like a main function with a
-// - list of arguments
-// - standard output
+/// Run an instance of this application like a main function.
+/// - list of arguments
+/// - standard output
 pub struct MainRunner {
 	args: Vec<String>,
 	stdout: Stdout
