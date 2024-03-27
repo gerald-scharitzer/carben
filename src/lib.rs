@@ -15,9 +15,17 @@ pub fn version() -> i32 {
 	1
 }
 
-const USAGE: &str = "Usage: carben [config file | health | version | zones]
+const USAGE: &str = "Usage: carben [options]
+
+No option prints this usage message. Multiple options are separated by spaces.
+
+Options:
+
 	config file: read the configuration from the file with the given name
 	health: print the API health
+	p: short for \"provider\"
+	provider: print the provider name
+	v: short for \"version\"
 	version: print the version
 	zones: print the zone name and country";
 
@@ -95,9 +103,13 @@ impl MainRunner {
 					let status = health.status;
 					writeln!(self.stdout, "health {state} {status}")?;
 				}
-				"version" => {
+				"p" | "provider" => {
+					let provider = &config.provider;
+					writeln!(self.stdout, "{provider}")?;
+				}
+				"v" | "version" => {
 					let version = version();
-					writeln!(self.stdout, "version {version}")?;
+					writeln!(self.stdout, "{version}")?;
 				}
 				"zones" => { // TODO move to provider
 					let zones = electricity_maps::zones();
