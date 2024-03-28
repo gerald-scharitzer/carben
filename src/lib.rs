@@ -3,7 +3,7 @@
 
 use std::env;
 use std::error::Error;
-use std::io::{self, Stdout, Write};
+use std::io::{self, Stderr, Stdout, Write};
 use std::result::Result;
 
 use config::Config;
@@ -27,7 +27,8 @@ Options:
 	provider: print the provider name
 	v: short for \"version\"
 	version: print the version
-	zones: print the zone name and country";
+	zones: print the zone name and country
+	--: separate main options from provider options";
 
 const DEFAULT_PROVIDER: &str = "electricity_maps";
 
@@ -67,14 +68,16 @@ impl Runner {
 /// - standard output
 pub struct MainRunner {
 	args: Vec<String>,
-	stdout: Stdout
+	stdout: Stdout,
+	stderr: Stderr
 }
 
 impl MainRunner {
 	pub fn new() -> MainRunner {
 		MainRunner {
 			args: env::args().collect(),
-			stdout: io::stdout()
+			stdout: io::stdout(),
+			stderr: io::stderr()
 		}
 	}
 
@@ -121,6 +124,10 @@ impl MainRunner {
 							None => writeln!(self.stdout, "zone {key} {name}")?
 						}
 					}
+				}
+				"--" => {
+					// TODO iterate through the provider options
+					writeln!(self.stderr, "warning: option \"--\" is not implemented")?;
 				}
 				_ => {
 					writeln!(self.stdout, "{USAGE}")?;
