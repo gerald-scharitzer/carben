@@ -1,3 +1,7 @@
+use std::error::Error;
+
+use super::API_ROOT;
+
 pub struct Monitor {
 	pub state: String
 }
@@ -19,8 +23,15 @@ impl Health {
 	}
 }
 
-pub fn health() -> Health { // TODO call API
-	Health::new(Monitor::new("ok".to_string()), "ok".to_string())
+const PATH: &str = "health";
+
+pub fn health() -> Result<Health, Box<dyn Error>> { // TODO call API
+	let url = format!("{API_ROOT}{PATH}");
+	let url = "http://httpbin.org/ip".parse::<hyper::Uri>()?;
+	let host = url.host().expect("URL needs a host");
+	let port = url.port_u16().unwrap_or(80);
+	let address = format!("{host}:{port}");
+	Ok(Health::new(Monitor::new("ok".to_string()), "ok".to_string()))
 }
 
 #[cfg(test)]

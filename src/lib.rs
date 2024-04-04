@@ -21,14 +21,29 @@ No option prints this usage message. Multiple options are separated by spaces.
 
 Options:
 
-	config file: read the configuration from the file with the given name
-	health: print the API health
-	p: short for \"provider\"
-	provider: print the provider name
-	v: short for \"version\"
-	version: print the version
-	zones: print the zone name and country
-	--: separate main options from provider options";
+	config file
+		read the configuration from the file with the given name
+
+	health
+		print the API health
+
+	p
+		short for \"provider\"
+
+	provider
+		print the provider name
+
+	v
+		short for \"version\"
+
+	version
+		print the version
+
+	zones
+		print the zone name and country
+
+	--
+		separate main options from provider options";
 
 const DEFAULT_PROVIDER: &str = "electricity_maps";
 
@@ -50,7 +65,7 @@ impl Runner {
 	pub fn run(&self) -> Result<(), Box<dyn Error>> {
 		match self.provider.as_str() {
 			"electricity_maps" => {
-				let health = electricity_maps::health();
+				let health = electricity_maps::health()?;
 				let state = health.monitors.state;
 				let status = health.status;
 				println!("health {state} {status}");
@@ -86,8 +101,10 @@ impl MainRunner {
 		let config = Config::new(&self.args)?;
 		let mut args = self.args.iter();
 		args.next(); // skip the program name
+		let mut has_args = false;
 
 		while let Some(arg) = args.next() {
+			has_args = true;
 			match arg.as_str() {
 				"config" => {
 					let subarg = args.next();
@@ -101,7 +118,7 @@ impl MainRunner {
 					}
 				}
 				"health" => { // TODO move to provider
-					let health = electricity_maps::health();
+					let health = electricity_maps::health()?;
 					let state = health.monitors.state;
 					let status = health.status;
 					writeln!(self.stdout, "health {state} {status}")?;
@@ -134,6 +151,10 @@ impl MainRunner {
 				}
 			}
 
+		}
+
+		if !has_args {
+			writeln!(self.stdout, "{USAGE}")?;
 		}
 
 		let runner = Runner::new();
