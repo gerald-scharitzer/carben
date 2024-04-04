@@ -66,6 +66,7 @@ impl Runner {
 /// Run an instance of this application like a main function.
 /// - list of arguments
 /// - standard output
+/// - standard error
 pub struct MainRunner {
 	args: Vec<String>,
 	stdout: Stdout,
@@ -83,21 +84,20 @@ impl MainRunner {
 
 	pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
 		let config = Config::new(&self.args)?;
-		let argc = self.args.len();
-		if argc == 1 {
-			writeln!(self.stdout, "{USAGE}")?;
-		}
+		let mut args = self.args.iter();
+		args.next(); // skip the program name
 
-		if argc > 1 { // TODO iterate through the arguments
-			let command = &self.args[1];
-			match command.as_str() {
+		while let Some(arg) = args.next() {
+			match arg.as_str() {
 				"config" => {
-					if argc > 2 {
-						let config_file = &self.args[2];
-						let config = config::from_path(config_file)?;
-						writeln!(self.stdout, "config {config}")?;
-					} else {
-						writeln!(self.stdout, "{USAGE}")?;
+					let subarg = args.next();
+					match subarg {
+						Some(subarg) => {
+							let config_file = subarg;
+							let config = config::from_path(config_file)?;
+							writeln!(self.stdout, "config {config}")?;
+						},
+						None => writeln!(self.stdout, "{USAGE}")?
 					}
 				}
 				"health" => { // TODO move to provider
@@ -133,6 +133,7 @@ impl MainRunner {
 					writeln!(self.stdout, "{USAGE}")?;
 				}
 			}
+
 		}
 
 		let runner = Runner::new();

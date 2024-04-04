@@ -25,7 +25,8 @@ pub fn from_path(path: &str) -> Result<String, Box<dyn Error>> {
 	}
 }
 
-mod test {
+#[cfg(test)]
+mod tests {
 	use super::*;
 
 	#[test]
