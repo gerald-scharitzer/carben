@@ -65,10 +65,6 @@ impl Runner {
 	pub fn run(&self) -> Result<(), Box<dyn Error>> {
 		match self.provider.as_str() {
 			"electricity_maps" => {
-				let health = electricity_maps::health()?;
-				let state = health.monitors.state;
-				let status = health.status;
-				println!("health {state} {status}");
 			}
 			_ => {
 				println!("{USAGE}");
@@ -118,7 +114,7 @@ impl MainRunner {
 					}
 				}
 				"health" => { // TODO move to provider
-					let health = electricity_maps::health()?;
+					let health = electricity_maps::get()?;
 					let state = health.monitors.state;
 					let status = health.status;
 					writeln!(self.stdout, "health {state} {status}")?;
