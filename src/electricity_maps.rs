@@ -1,7 +1,6 @@
-mod health;
-pub use health::*;
+//! Electricity Maps API https://static.electricitymaps.com/api/docs/index.html
 
-mod zone;
-pub use zone::*;
+pub mod health;
+pub mod zone;
 
 const API_ROOT: &str = "https://api.electricitymap.org/";

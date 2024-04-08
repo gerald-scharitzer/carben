@@ -1,8 +1,10 @@
+//! Electricity Maps Health API https://static.electricitymaps.com/api/docs/index.html#health
+
 use std::error::Error;
 
 use reqwest::StatusCode;
-use reqwest::header::CONTENT_TYPE;
 use reqwest::blocking::Client;
+use reqwest::header::CONTENT_TYPE;
 use serde::Deserialize;
 
 use super::API_ROOT;
@@ -18,6 +20,7 @@ impl Monitor {
 	}
 }
 
+// API response
 #[derive(Deserialize)]
 pub struct Health {
 	pub monitors: Monitor,
@@ -27,6 +30,15 @@ pub struct Health {
 impl Health {
 	pub fn new(monitors: Monitor, status: String) -> Self {
 		Health { monitors, status }
+	}
+
+	pub fn result(&self) -> Result<(), Box<dyn Error>> {
+		let state = &self.monitors.state;
+		let status = &self.status;
+		if state != "ok" || status != "ok" {
+			return Err(Box::<dyn Error>::from(format!("status {status} monitor state {state}")));
+		}
+		Ok(())
 	}
 }
 
@@ -60,8 +72,9 @@ mod tests {
 	fn test_health() {
 		const STATE: &str = "ok";
 		const STATUS: &str = "ok";
-		let result = Health::new(Monitor::new(STATE.to_string()), STATUS.to_string());
-		assert_eq!(result.monitors.state, STATE);
-		assert_eq!(result.status, STATUS);
+		let health = Health::new(Monitor::new(STATE.to_string()), STATUS.to_string());
+		assert_eq!(health.monitors.state, STATE);
+		assert_eq!(health.status, STATUS);
+		assert!(health.result().is_ok());
 	}
 }
