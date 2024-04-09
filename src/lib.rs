@@ -9,7 +9,7 @@ use std::result::Result;
 use config::Config;
 
 mod config;
-mod electricity_maps;
+pub mod electricity_maps;
 
 pub fn version() -> i32 {
 	1
