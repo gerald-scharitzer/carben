@@ -2,6 +2,12 @@
 
 Get the carbon intensity of energy systems.
 
+# Rationale
+
+The availability of low-carbon energy varies in space and time.
+Varying the production and consumption of energy in space or time changes the total emissions.
+Get the carbon intensity of the constituents to optimize the carbon intensity of the system.
+
 # Develop
 
 1. Clone with `git clone https://github.com/gerald-scharitzer/carben.git`
