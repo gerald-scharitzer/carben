@@ -1,4 +1,4 @@
-/// web client for electricity maps API
+//! web client for electricity maps API
 
 use std::error::Error;
 

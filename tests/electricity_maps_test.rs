@@ -1,4 +1,4 @@
-/// integration tests for the Electricity Maps API
+//! integration tests for the Electricity Maps API
 
 use std::error::Error;
 
@@ -13,9 +13,16 @@ fn test_health() -> Result<(), Box<dyn Error>>{
 }
 
 #[test]
-fn test_zones() -> Result<(), Box<dyn Error>> {
+fn test_zones_yaml() -> Result<(), Box<dyn Error>> {
 	let zones = zone::zones_yaml()?;
 	println!("{zones}");
+	assert!(zones.len() > 0);
+	Ok(())
+}
+
+#[test]
+fn test_zones() -> Result<(), Box<dyn Error>> {
+	let zones = zone::zones()?;
 	assert!(zones.len() > 0);
 	Ok(())
 }

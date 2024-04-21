@@ -1,7 +1,7 @@
 //! # Carben
 //! optimizes the greenhouse gas emissions of computing workloads.
 
-use std::{env, result};
+use std::env;
 use std::error::Error;
 use std::io::{self, Stderr, Stdout, Write};
 use std::result::Result;
@@ -126,7 +126,7 @@ impl MainRunner {
 					writeln!(self.stdout, "{version}")?;
 				}
 				"zones" => { // TODO move to provider
-					let zones = electricity_maps::zone::zones();
+					let zones = electricity_maps::zone::zones()?;
 					for (key, zone) in zones {
 						let name = zone.name;
 						let country = zone.country;
