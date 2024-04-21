@@ -2,12 +2,9 @@
 
 use std::error::Error;
 
-use reqwest::StatusCode;
-use reqwest::blocking::Client;
-use reqwest::header::CONTENT_TYPE;
 use serde::Deserialize;
 
-use super::API_ROOT;
+use super::web;
 
 #[derive(Deserialize)]
 pub struct Monitor {
@@ -44,22 +41,8 @@ impl Health {
 
 const PATH: &str = "health";
 
-pub fn get() -> Result<Health, Box<dyn Error>> {
-	let url = format!("{API_ROOT}{PATH}");
-	let client = Client::new();
-	let request = client.get(&url);
-	let response = request.send()?;
-
-	let status = response.status();
-	if status != StatusCode::OK {
-		return Err(Box::<dyn Error>::from(format!("response status {status}")));
-	}
-
-	let content_type = &response.headers()[CONTENT_TYPE];
-	if content_type != "application/json; charset=utf-8" { // TODO use mime crate
-		return Err(Box::<dyn Error>::from(format!("response content type {}", content_type.to_str()?)));
-	}
-
+pub fn health() -> Result<Health, Box<dyn Error>> {
+	let response = web::get(PATH)?;
 	let health: Health = response.json()?;
 	Ok(health)
 }

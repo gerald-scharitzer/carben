@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 
+use super::web;
+
 pub struct Zone {
 	// Equal names usually refer to equal zones
 	pub name: String,
@@ -11,6 +13,13 @@ impl Zone {
 	fn new(name: String, country: Option<String>) -> Self {
 		Zone { name, country }
 	}
+}
+
+const PATH: &str = "v3/zones";
+
+pub fn zones_yaml() -> Result<String, Box<dyn std::error::Error>> {
+	let text = web::text(PATH)?;
+	Ok(text)
 }
 
 pub fn zones() -> HashMap<String, Zone> {

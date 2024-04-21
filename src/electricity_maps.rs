@@ -3,4 +3,4 @@
 pub mod health;
 pub mod zone;
 
-const API_ROOT: &str = "https://api.electricitymap.org/";
+mod web;

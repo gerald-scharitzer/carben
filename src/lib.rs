@@ -114,7 +114,7 @@ impl MainRunner {
 					}
 				}
 				"health" => { // TODO move to provider
-					let health = electricity_maps::health::get()?;
+					let health = electricity_maps::health::health()?;
 					health.result()?;
 				}
 				"p" | "provider" => {
