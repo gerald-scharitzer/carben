@@ -46,7 +46,7 @@ pub fn api_zones() -> Result<HashMap<String, ApiZone>, Box<dyn std::error::Error
 pub fn zones() -> Result<HashMap<String, Zone>, Box<dyn std::error::Error>> {
 	let api_zones: HashMap<String, ApiZone> = api_zones()?;
 	let mut zones = HashMap::new();
-	for (key, api_zone) in api_zones {
+	for (key, api_zone) in api_zones { // TODO deserialize directly to Zone
 		let zone = Zone::new(api_zone.zoneName, api_zone.countryName);
 		zones.insert(key, zone);
 	}
