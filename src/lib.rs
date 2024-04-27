@@ -7,9 +7,11 @@ use std::io::{self, Stderr, Stdout, Write};
 use std::result::Result;
 
 use config::Config;
+use format::Format;
 
 mod config;
 pub mod electricity_maps;
+mod format;
 
 pub fn version() -> i32 {
 	1
@@ -23,6 +25,12 @@ Options:
 
 	config file
 		read the configuration from the file with the given name
+
+	f
+		short for \"format\"
+
+	format csv | json
+		print the output in the specified format
 
 	health
 		print the API health
@@ -94,7 +102,7 @@ impl MainRunner {
 	}
 
 	pub fn run(&mut self) -> Result<(), Box<dyn Error>> {
-		let config = Config::new(&self.args)?;
+		let mut config = Config::new(&self.args)?;
 		let mut args = self.args.iter();
 		args.next(); // skip the program name
 		let mut has_args = false;
@@ -109,6 +117,19 @@ impl MainRunner {
 							let config_file = subarg;
 							let config = config::from_path(config_file)?;
 							writeln!(self.stdout, "config {config}")?;
+						},
+						None => writeln!(self.stdout, "{USAGE}")?
+					}
+				}
+				"f" | "format" => {
+					let subarg = args.next();
+					match subarg {
+						Some(subarg) => {
+							match subarg.as_str() {
+								"csv" => config.format = Format::Csv,
+								"json" => config.format = Format::Json,
+								_ => writeln!(self.stdout, "{USAGE}")?
+							}
 						},
 						None => writeln!(self.stdout, "{USAGE}")?
 					}

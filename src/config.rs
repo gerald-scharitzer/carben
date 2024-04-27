@@ -2,15 +2,19 @@ use std::error::Error;
 use std::fs;
 use std::io::{stdin, Read};
 
+use super::format::Format;
+
 const DEFAULT_PROVIDER: &str = "electricity_maps";
+const DEFAULT_FORMAT: Format = Format::Json;
 
 pub struct Config {
-	pub provider: String
+	pub provider: String,
+	pub format: Format
 }
 
 impl Config {
 	pub fn new(args: &[String]) -> Result<Config, Box<dyn Error>> { // TODO put args in separate module
-		Ok(Config { provider: DEFAULT_PROVIDER.to_string() })
+		Ok(Config { provider: DEFAULT_PROVIDER.to_string(), format: DEFAULT_FORMAT })
 	}
 }
 

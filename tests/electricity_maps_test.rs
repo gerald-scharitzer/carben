@@ -24,5 +24,9 @@ fn test_zones_yaml() -> Result<(), Box<dyn Error>> {
 fn test_zones() -> Result<(), Box<dyn Error>> {
 	let zones = zone::zones()?;
 	assert!(zones.len() > 0);
+	for (key, zone) in zones {
+		assert!(key.len() > 0);
+		assert!(zone.name.len() > 0);
+	}
 	Ok(())
 }
