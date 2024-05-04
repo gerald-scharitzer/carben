@@ -32,7 +32,11 @@ impl Zone {
 
 const PATH: &str = "v3/zones";
 
-pub fn zones_yaml() -> Result<String, Box<dyn std::error::Error>> {
+/// Get the zones as JSON string.
+/// # Returns
+/// the response text of the web request and
+/// does no verify or validate the JSON string.
+pub fn zones_json() -> Result<String, Box<dyn std::error::Error>> {
 	let text = web::text(PATH)?;
 	Ok(text)
 }
@@ -51,6 +55,20 @@ pub fn zones() -> Result<HashMap<String, Zone>, Box<dyn std::error::Error>> {
 		zones.insert(key, zone);
 	}
 	Ok(zones)
+}
+
+pub fn zones_csv() -> Result<String, Box<dyn std::error::Error>> {
+	let api_zones: HashMap<String, ApiZone> = api_zones()?;
+	let mut text = "key,zone,country\n".to_string();
+	for (key, api_zone) in api_zones {
+		let zone_name = &api_zone.zoneName;
+		let country = match api_zone.countryName {
+			Some(country) => country,
+			None => "".to_string()
+		};
+		text.push_str(&format!("{key},{zone_name},{country}\n"));
+	}
+	Ok(text)
 }
 
 #[cfg(test)]

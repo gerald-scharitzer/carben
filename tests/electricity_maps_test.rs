@@ -13,8 +13,8 @@ fn test_health() -> Result<(), Box<dyn Error>>{
 }
 
 #[test]
-fn test_zones_yaml() -> Result<(), Box<dyn Error>> {
-	let zones = zone::zones_yaml()?;
+fn test_zones_json() -> Result<(), Box<dyn Error>> {
+	let zones = zone::zones_json()?;
 	println!("{zones}");
 	assert!(zones.len() > 0);
 	Ok(())
@@ -28,5 +28,13 @@ fn test_zones() -> Result<(), Box<dyn Error>> {
 		assert!(key.len() > 0);
 		assert!(zone.name.len() > 0);
 	}
+	Ok(())
+}
+
+#[test]
+fn test_zones_csv() -> Result<(), Box<dyn Error>> {
+	let csv = zone::zones_csv()?;
+	println!("{csv}");
+	assert!(csv.len() > 0);
 	Ok(())
 }
