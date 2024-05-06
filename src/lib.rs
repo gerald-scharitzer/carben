@@ -147,13 +147,14 @@ impl MainRunner {
 					writeln!(self.stdout, "{version}")?;
 				}
 				"zones" => { // TODO move to provider
-					let zones = electricity_maps::zone::zones()?;
-					for (key, zone) in zones {
-						let name = zone.name;
-						let country = zone.country;
-						match country {
-							Some(country) => writeln!(self.stdout, "zone {key} {name} {country}")?,
-							None => writeln!(self.stdout, "zone {key} {name}")?
+					match config.format {
+						Format::Csv => {
+							let zones = electricity_maps::zone::zones_csv()?;
+							writeln!(self.stdout, "{zones}")?;
+						}
+						Format::Json => {
+							let zones = electricity_maps::zone::zones_json()?;
+							writeln!(self.stdout, "{zones}")?;
 						}
 					}
 				}
