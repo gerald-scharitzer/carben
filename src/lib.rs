@@ -3,7 +3,7 @@
 
 use std::env;
 use std::error::Error;
-use std::io::{self, Stderr, Stdout, Write};
+use std::io::{self, Write};
 use std::result::Result;
 
 use config::Config;
@@ -88,16 +88,16 @@ impl Runner {
 /// - standard error
 pub struct MainRunner {
 	args: Vec<String>,
-	stdout: Stdout,
-	stderr: Stderr
+	stdout: Box<dyn Write>,
+	stderr: Box<dyn Write>
 }
 
 impl MainRunner {
 	pub fn new() -> MainRunner {
 		MainRunner {
 			args: env::args().collect(),
-			stdout: io::stdout(),
-			stderr: io::stderr()
+			stdout: Box::new(io::stdout()),
+			stderr: Box::new(io::stderr())
 		}
 	}
 
@@ -106,9 +106,11 @@ impl MainRunner {
 		let mut args = self.args.iter();
 		args.next(); // skip the program name
 		let mut has_args = false;
+		let mut argx = 0; // argument index
 
 		while let Some(arg) = args.next() {
 			has_args = true;
+			argx += 1;
 			match arg.as_str() {
 				"config" => {
 					let subarg = args.next();
@@ -163,7 +165,7 @@ impl MainRunner {
 					writeln!(self.stderr, "warning: option \"--\" is not implemented")?;
 				}
 				_ => {
-					writeln!(self.stdout, "{USAGE}")?;
+					writeln!(self.stderr, "argument at index {argx} is not implemented")?;
 				}
 			}
 
