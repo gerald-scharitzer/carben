@@ -24,7 +24,8 @@ No option prints this usage message. Multiple options are separated by spaces.
 Options:
 
 	config file
-		read the configuration from the file with the given name
+		read the configuration from the file with the given name,
+		where the file \"-\" is standard input
 
 	f
 		short for \"format\"

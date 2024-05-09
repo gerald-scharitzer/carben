@@ -44,9 +44,9 @@ mod tests {
 		
 	#[test]
 	fn test_from_path() {
-		let config_result = from_path("stdin.yaml");
+		let config_result = from_path("stdin.toml");
 		match config_result {
-			Ok(config) => assert_eq!(config, "key: value\n"),
+			Ok(config) => assert_eq!(config, "provider.electricitymaps = { token = \"\" }\n"),
 			Err(e) => panic!("Error: {}", e)
 		}
 	}

@@ -31,3 +31,4 @@ This package is licensed according to the BSD license and its dependencies as fo
 
 reqwest: tbd
 serde: tbd
+toml: tbd
