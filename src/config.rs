@@ -2,6 +2,8 @@ use std::error::Error;
 use std::fs;
 use std::io::{stdin, Read};
 
+use toml::Table;
+
 use super::format::Format;
 
 const DEFAULT_PROVIDER: &str = "electricity_maps";
@@ -44,10 +46,9 @@ mod tests {
 		
 	#[test]
 	fn test_from_path() {
-		let config_result = from_path("stdin.toml");
-		match config_result {
-			Ok(config) => assert_eq!(config, "provider.electricitymaps = { token = \"\" }\n"),
-			Err(e) => panic!("Error: {}", e)
-		}
+		let config = from_path("stdin.toml").unwrap();
+		assert_eq!(config, "provider.electricitymaps = { token = \"abcd\" }\n");
+		let config_map = config.parse::<Table>().unwrap();
+		assert_eq!(config_map["provider"]["electricitymaps"]["token"].as_str(), Some("abcd"));
 	}
 }
